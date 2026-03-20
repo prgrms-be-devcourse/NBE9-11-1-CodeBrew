@@ -33,7 +33,9 @@ public class CartService {
         cartItem.changeQuantity(quantity);
         return cartItemRepository.save(cartItem);
     }
-    public void removeItem(){
-
+    public void removeItem(Integer id){
+        CartItem cartItem = cartItemRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("해당 장바구니 항목이 없습니다."));
+        cartItemRepository.delete(cartItem);
     }
 }

@@ -33,4 +33,9 @@ public class ApiV1CartController {
             ){
         return cartService.changeQuantity(id, cartItemQuantityDto);
     }
+
+    @DeleteMapping("/items/{id}")
+    public void removeItem(@PathVariable Integer id){
+        cartService.removeItem(id);
+    }
 }
