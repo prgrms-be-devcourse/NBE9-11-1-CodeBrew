@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/admin/products")
 public class ApiV1AdminProductController {
 
-    private ProductService productService;
+    private final ProductService productService;
 
     record ProductCreateReqBody(
             @Size(max = 30, message = "상품명은 30자 이내로 입력해주세요.")

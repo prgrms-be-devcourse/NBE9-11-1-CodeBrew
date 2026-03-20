@@ -15,11 +15,14 @@ public class BaseInitData {
 
     @Bean
     public ApplicationRunner initData() {
-        return args -> work1();
+        return args -> {
+            initProducts();
+            //initAdmin();
+        };
     }
 
-    public void work1() {
-        if(productService.count() > 0){
+    public void initProducts() {
+        if (productService.count() == 0) {
             return;
         }
         Product product1 = productService.create("Ethiopia Sidamo", 5000);
@@ -28,5 +31,4 @@ public class BaseInitData {
         Product product4 = productService.create("Columbia Narino", 6500);
 
     }
-
 }
