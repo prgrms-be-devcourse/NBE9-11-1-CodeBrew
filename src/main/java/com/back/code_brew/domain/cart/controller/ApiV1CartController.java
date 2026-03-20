@@ -1,11 +1,10 @@
 package com.back.code_brew.domain.cart.controller;
 
+import com.back.code_brew.domain.cart.dto.CartItemDto;
 import com.back.code_brew.domain.cart.entity.CartItem;
 import com.back.code_brew.domain.cart.service.CartService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,5 +18,10 @@ public class ApiV1CartController {
     @GetMapping
     public List<CartItem> getCart(){
         return cartService.getCart();
+    }
+
+    @PostMapping("/items")
+    public CartItem addItem(@RequestBody CartItemDto cartItemDto){
+        return cartService.addItem(cartItemDto);
     }
 }
