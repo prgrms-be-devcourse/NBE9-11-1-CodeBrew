@@ -1,4 +1,4 @@
-package com.back.code_brew.home.controller;
+package com.back.code_brew.domain.home.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

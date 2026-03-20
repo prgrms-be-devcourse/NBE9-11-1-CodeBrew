@@ -1,7 +1,7 @@
 package com.back.code_brew.order.controller;
 
-import com.back.code_brew.order.repository.OrderRepository;
-import com.back.code_brew.order.service.OrderService;
+import com.back.code_brew.domain.order.repository.OrderRepository;
+import com.back.code_brew.domain.order.service.OrderService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

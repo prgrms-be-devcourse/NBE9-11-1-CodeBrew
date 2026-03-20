@@ -1,6 +1,6 @@
-package com.back.code_brew.order.dto;
+package com.back.code_brew.domain.order.dto;
 
-import com.back.code_brew.order.entity.Order;
+import com.back.code_brew.domain.order.entity.Order;
 
 import java.time.LocalDateTime;
 

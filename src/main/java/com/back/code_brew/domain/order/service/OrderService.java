@@ -1,7 +1,7 @@
-package com.back.code_brew.order.service;
+package com.back.code_brew.domain.order.service;
 
-import com.back.code_brew.order.entity.Order;
-import com.back.code_brew.order.repository.OrderRepository;
+import com.back.code_brew.domain.order.entity.Order;
+import com.back.code_brew.domain.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

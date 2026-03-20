@@ -1,4 +1,4 @@
-package com.back.code_brew.order.entity;
+package com.back.code_brew.domain.order.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

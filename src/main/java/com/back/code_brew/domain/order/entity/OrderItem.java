@@ -1,4 +1,4 @@
-package com.back.code_brew.order.entity;
+package com.back.code_brew.domain.order.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,11 +16,16 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String product_id;
     private int price;
     private int quantity;
 
     @ManyToOne (fetch = LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+
 }

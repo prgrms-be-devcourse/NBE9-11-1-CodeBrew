@@ -1,13 +1,12 @@
-package com.back.code_brew.order.controller;
+package com.back.code_brew.domain.order.controller;
 
-import com.back.code_brew.order.entity.Order;
-import com.back.code_brew.order.service.OrderService;
+import com.back.code_brew.domain.order.entity.Order;
+import com.back.code_brew.domain.order.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
