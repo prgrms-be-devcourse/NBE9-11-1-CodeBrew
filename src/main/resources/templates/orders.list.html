@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 목록</title>
+</head>
+<body>
+
+<h1>📦 주문 목록</h1>
+
+<div>
+    <a href="/orders/create">➕ 주문 생성</a>
+</div>
+
+<hr/>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>이름</th>
+        <th>이메일</th>
+        <th>주소</th>
+        <th>상태</th>
+        <th>생성일</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.name}"></td>
+        <td th:text="${order.email}"></td>
+        <td th:text="${order.address}"></td>
+        <td th:text="${order.status}"></td>
+        <td th:text="${order.createdAt}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
