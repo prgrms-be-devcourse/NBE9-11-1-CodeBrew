@@ -1,6 +1,7 @@
 package com.back.code_brew.domain.cart.service;
 
 import com.back.code_brew.domain.cart.dto.CartItemDto;
+import com.back.code_brew.domain.cart.dto.CartItemQuantityDto;
 import com.back.code_brew.domain.cart.entity.CartItem;
 import com.back.code_brew.domain.cart.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +26,14 @@ public class CartService {
         );
         return cartItemRepository.save(cartItem);
     }
-    public void removeItem(){
-
+    public CartItem changeQuantity(Integer id, CartItemQuantityDto cartItemQuantityDto){
+        CartItem cartItem = cartItemRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("해당 장바구니 항목이 없습니다."));
+        int quantity = cartItemQuantityDto.getQuantity();
+        cartItem.changeQuantity(quantity);
+        return cartItemRepository.save(cartItem);
     }
-    public void changeQuantity(){
+    public void removeItem(){
 
     }
 }

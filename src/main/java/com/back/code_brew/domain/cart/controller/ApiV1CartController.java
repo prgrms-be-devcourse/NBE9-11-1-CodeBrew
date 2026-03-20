@@ -1,6 +1,7 @@
 package com.back.code_brew.domain.cart.controller;
 
 import com.back.code_brew.domain.cart.dto.CartItemDto;
+import com.back.code_brew.domain.cart.dto.CartItemQuantityDto;
 import com.back.code_brew.domain.cart.entity.CartItem;
 import com.back.code_brew.domain.cart.service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +24,13 @@ public class ApiV1CartController {
     @PostMapping("/items")
     public CartItem addItem(@RequestBody CartItemDto cartItemDto){
         return cartService.addItem(cartItemDto);
+    }
+
+    @PatchMapping("/items/{id}")
+    public CartItem changeQuantity(
+            @PathVariable Integer id,
+            @RequestBody CartItemQuantityDto cartItemQuantityDto
+            ){
+        return cartService.changeQuantity(id, cartItemQuantityDto);
     }
 }

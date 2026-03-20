@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItemDto {
-   private Integer productId;
-   private String productName;
-   private int price;
-   private int quantity;
+public class CartItemQuantityDto {
+    private int quantity;
 }

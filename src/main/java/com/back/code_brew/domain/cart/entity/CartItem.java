@@ -15,14 +15,14 @@ public class CartItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    private Long productId;
+    private Integer productId;
     private String productName;
     private int price;
     private int quantity;
 
-    public CartItem(Long productId, String productName, int price, int quantity){
+    public CartItem(Integer productId, String productName, int price, int quantity){
         this.productId = productId;
         this.productName = productName;
         this.price = price;
