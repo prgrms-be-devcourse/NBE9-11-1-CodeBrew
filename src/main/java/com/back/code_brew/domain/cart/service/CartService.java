@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,12 +19,24 @@ public class CartService {
         return cartItemRepository.findAll();
     }
     public CartItem addItem(CartItemDto cartItemDto){
+
+        Optional<CartItem> optionalCartItem = cartItemRepository.findByProductId(cartItemDto.getProductId());
+
+        // 이미 존재하면 → 수량 증가
+        if (optionalCartItem.isPresent()){
+            CartItem cartItem = optionalCartItem.get();
+            cartItem.addQuantity(cartItemDto.getQuantity());
+            return cartItemRepository.save(cartItem);
+        }
+
+        // 없으면 → 새로 생성
         CartItem cartItem = new CartItem(
                 cartItemDto.getProductId(),
                 cartItemDto.getProductName(),
                 cartItemDto.getPrice(),
                 cartItemDto.getQuantity()
         );
+
         return cartItemRepository.save(cartItem);
     }
     public CartItem changeQuantity(Integer id, CartItemQuantityDto cartItemQuantityDto){
