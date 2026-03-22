@@ -15,15 +15,21 @@ import java.util.Optional;
 public class CartService {
 
     private final CartItemRepository cartItemRepository;
-    public List<CartItem> getCart(){
+
+    public List<CartItem> getCart() {
         return cartItemRepository.findAll();
     }
-    public CartItem addItem(CartItemDto cartItemDto){
+
+    public CartItem addItem(CartItemDto cartItemDto) {
+
+        if (cartItemDto.getQuantity() < 1) {
+            throw new IllegalArgumentException("수량은 1 이상이어야 합니다.");
+        }
 
         Optional<CartItem> optionalCartItem = cartItemRepository.findByProductId(cartItemDto.getProductId());
 
         // 이미 존재하면 → 수량 증가
-        if (optionalCartItem.isPresent()){
+        if (optionalCartItem.isPresent()) {
             CartItem cartItem = optionalCartItem.get();
             cartItem.addQuantity(cartItemDto.getQuantity());
             return cartItemRepository.save(cartItem);
@@ -39,24 +45,30 @@ public class CartService {
 
         return cartItemRepository.save(cartItem);
     }
-    public CartItem changeQuantity(Integer id, CartItemQuantityDto cartItemQuantityDto){
+
+    public CartItem changeQuantity(Integer id, CartItemQuantityDto cartItemQuantityDto) {
+        if (cartItemQuantityDto.getQuantity() < 1) {
+            throw new IllegalArgumentException("수량은 1 이상이어야 합니다.");
+        }
         CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("해당 장바구니 항목이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 장바구니 항목이 없습니다."));
         int quantity = cartItemQuantityDto.getQuantity();
         cartItem.changeQuantity(quantity);
         return cartItemRepository.save(cartItem);
     }
-    public void removeItem(Integer id){
+
+    public void removeItem(Integer id) {
         CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("해당 장바구니 항목이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 장바구니 항목이 없습니다."));
         cartItemRepository.delete(cartItem);
     }
-    public int getTotalPrice(){
+
+    public int getTotalPrice() {
         List<CartItem> cartItems = cartItemRepository.findAll();
 
         int totalPrice = 0;
 
-        for(CartItem cartItem : cartItems){
+        for (CartItem cartItem : cartItems) {
             totalPrice += cartItem.getTotalPrice();
         }
         return totalPrice;
