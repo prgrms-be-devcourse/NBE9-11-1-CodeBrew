@@ -38,4 +38,14 @@ public class CartService {
                 .orElseThrow(()-> new IllegalArgumentException("해당 장바구니 항목이 없습니다."));
         cartItemRepository.delete(cartItem);
     }
+    public int getTotalPrice(){
+        List<CartItem> cartItems = cartItemRepository.findAll();
+
+        int totalPrice = 0;
+
+        for(CartItem cartItem : cartItems){
+            totalPrice += cartItem.getTotalPrice();
+        }
+        return totalPrice;
+    }
 }

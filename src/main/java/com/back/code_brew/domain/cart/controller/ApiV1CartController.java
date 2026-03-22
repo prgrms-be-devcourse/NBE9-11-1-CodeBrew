@@ -38,4 +38,9 @@ public class ApiV1CartController {
     public void removeItem(@PathVariable Integer id){
         cartService.removeItem(id);
     }
+
+    @GetMapping("/total-price")
+    public int getTotalPrice(){
+        return cartService.getTotalPrice();
+    }
 }
