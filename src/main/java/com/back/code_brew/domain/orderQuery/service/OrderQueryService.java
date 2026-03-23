@@ -54,7 +54,7 @@ public class OrderQueryService {
         return new OrderDetailResponseDto(order);
     }
 
-    // 주문자 정보 수정
+    // 주문 수정
     @Transactional
     public OrderDetailResponseDto updateOrder(Long orderId, OrderUpdateRequestDto requestDto) {
         Order order = orderRepository.findById(orderId)
