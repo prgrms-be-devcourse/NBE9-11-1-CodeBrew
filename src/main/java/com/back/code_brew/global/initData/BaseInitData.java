@@ -22,7 +22,7 @@ public class BaseInitData {
     }
 
     public void initProducts() {
-        if (productService.count() == 0) {
+        if (productService.count() > 0) {
             return;
         }
         Product product1 = productService.create("Ethiopia Sidamo", 5000);
