@@ -19,10 +19,10 @@ public class AuthService {
 
     public LoginResult login(String username, String password) {
         Admin admin = adminRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("없는 관리자"));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
 
         if (!passwordEncoder.matches(password, admin.getPassword())) {
-            throw new RuntimeException("비번 틀림");
+            throw new IllegalArgumentException("비밀번호가 잘못되었습니다.");
         }
 
         String token = jwtUtil.createToken(admin.getUsername(), admin.getRole());
