@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -33,7 +35,7 @@ public class ProductService {
     }
 
     public Product findById(int id) {
-        return productRepository.findById(id).orElseThrow(()-> new RuntimeException("상품없음"));
+        return productRepository.findById(id).orElseThrow(()-> new NoSuchElementException("해당하는 상품이 없습니다."));
     }
 
     public List<Product> findAll() {
