@@ -1,36 +1,49 @@
 package com.back.code_brew.domain.admin.controller;
 
+import com.back.code_brew.domain.admin.dto.AdminDto;
+import com.back.code_brew.domain.admin.dto.LoginResult;
 import com.back.code_brew.domain.admin.service.AuthService;
+import com.back.code_brew.global.rsData.RsData;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1")
 public class AuthController {
     private final AuthService authService;
 
-//    record LoginReqBody(
-//            @NotBlank(message = "아이디 입력")
-//            String adminName,
-//
-//            @NotBlank(message = "비밀번호 입력")
-//            String password
-//    ) {
-//    }
-//
-//    record LoginResBody(
-//        String token,
-//        AdminDto adminDto
-//    ) {
-//    }
+    record LoginReqBody(
+            @NotBlank(message = "아이디를 입력하세요.")
+            String username,
+
+            @NotBlank(message = "비밀번호를 입력하세요.")
+            String password
+    ) {
+    }
+
+    record LoginResBody(
+        String token,
+        AdminDto adminDto
+    ) {
+    }
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> req) {
-        String token = authService.login(req.get("adminName"), req.get("password"));
-        return Map.of("token", token);
+    public RsData<LoginResBody> login(@RequestBody @Valid LoginReqBody reqBody) {
+        LoginResult result = authService.login(reqBody.username(), reqBody.password());
+
+        return new RsData<>(
+                "로그인 성공",
+                "200-1",
+                new LoginResBody(
+                        result.token(),
+                        new AdminDto(result.admin())
+                )
+        );
     }
 }

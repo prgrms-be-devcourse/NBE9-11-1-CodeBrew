@@ -21,7 +21,7 @@ public class AdminProductController {
 
     record ProductCreateReqBody(
             @Size(max = 30, message = "상품명은 30자 이내로 입력해주세요.")
-            @NotBlank(message = "상품명 입력을 입력해주세요.")
+            @NotBlank(message = "상품명을 입력해주세요.")
             String productName,
 
             @NotNull
