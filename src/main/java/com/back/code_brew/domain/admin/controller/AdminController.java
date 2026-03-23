@@ -1,8 +1,8 @@
 package com.back.code_brew.domain.admin.controller;
 
 import com.back.code_brew.domain.admin.dto.AdminDto;
-import com.back.code_brew.domain.admin.dto.LoginResult;
-import com.back.code_brew.domain.admin.service.AuthService;
+import com.back.code_brew.domain.admin.dto.LoginDto;
+import com.back.code_brew.domain.admin.service.AdminService;
 import com.back.code_brew.global.rsData.RsData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class AuthController {
-    private final AuthService authService;
+public class AdminController {
+    private final AdminService adminService;
 
     record LoginReqBody(
             @NotBlank(message = "아이디를 입력하세요.")
@@ -35,7 +35,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public RsData<LoginResBody> login(@RequestBody @Valid LoginReqBody reqBody) {
-        LoginResult result = authService.login(reqBody.username(), reqBody.password());
+        LoginDto result = adminService.login(reqBody.username(), reqBody.password());
 
         return new RsData<>(
                 "로그인 성공",

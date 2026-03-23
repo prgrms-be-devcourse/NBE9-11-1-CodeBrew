@@ -1,6 +1,6 @@
 package com.back.code_brew.domain.admin.service;
 
-import com.back.code_brew.domain.admin.dto.LoginResult;
+import com.back.code_brew.domain.admin.dto.LoginDto;
 import com.back.code_brew.domain.admin.entity.Admin;
 import com.back.code_brew.domain.admin.repository.AdminRepository;
 import com.back.code_brew.global.jwt.JwtUtil;
@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AdminService {
 
     private final AdminRepository adminRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
 
-    public LoginResult login(String username, String password) {
+    public LoginDto login(String username, String password) {
         Admin admin = adminRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
 
@@ -27,6 +27,6 @@ public class AuthService {
 
         String token = jwtUtil.createToken(admin.getUsername(), admin.getRole());
 
-        return new LoginResult(token, admin);
+        return new LoginDto(token, admin);
     }
 }
