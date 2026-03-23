@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class OrderQueryService {
     // 주문 상세 조회
     public OrderDetailResponseDto getOrderDetail(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다. orderId=" + orderId));
+                .orElseThrow(() -> new NoSuchElementException("해당 주문이 없습니다. orderId=" + orderId));
 
         return new OrderDetailResponseDto(order);
     }
@@ -42,7 +43,7 @@ public class OrderQueryService {
     @Transactional
     public OrderDetailResponseDto cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("해당 주문이 없습니다."));
 
         // 출고 전("ORDERED")일 때만 취소 가능
         if (!order.getStatus().equals("ORDERED")) {
@@ -58,7 +59,7 @@ public class OrderQueryService {
     @Transactional
     public OrderDetailResponseDto updateOrder(Long orderId, OrderUpdateRequestDto requestDto) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("해당 주문이 없습니다."));
 
         if (!order.getStatus().equals("ORDERED")) {
             throw new IllegalArgumentException("출고 전 주문만 수정할 수 있습니다.");
@@ -73,7 +74,7 @@ public class OrderQueryService {
 
         for (OrderUpdateItemRequestDto itemDto : requestDto.items()) {
             Product product = productRepository.findById(itemDto.productId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+                    .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
 
             OrderItem orderItem = new OrderItem(
                     order,
