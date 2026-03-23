@@ -1,5 +1,6 @@
 package com.back.code_brew.domain.order.controller;
 
+import com.back.code_brew.domain.order.dto.OrderRequest;
 import com.back.code_brew.domain.order.entity.Order;
 import com.back.code_brew.domain.order.service.OrderService;
 import jakarta.validation.Valid;
@@ -7,10 +8,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @Controller
@@ -54,9 +54,20 @@ public class OrderController {
         return "redirect:/orders/%d".formatted(order.getId());
     }
 
-    @GetMapping("/orders")
+    @GetMapping("/api/orders")
     public String list() {
         return "orders/list";
+    }
+    @PostMapping("api/orders")
+    public void createOrder(@RequestBody OrderRequest request) {
+        orderService.createOrder(request);
+    }
+
+    @GetMapping("/orders/{id}")
+    public String detail(@PathVariable int id, Model model) {
+        Order order = orderService.findById(id);
+        model.addAttribute("order", order);
+        return "orders/detail";
     }
 }
 

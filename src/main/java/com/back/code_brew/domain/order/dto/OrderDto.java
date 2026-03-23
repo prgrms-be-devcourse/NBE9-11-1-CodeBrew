@@ -5,7 +5,7 @@ import com.back.code_brew.domain.order.entity.Order;
 import java.time.LocalDateTime;
 
 public record OrderDto (
-    Long id,
+    int id,
     String name,
     String email,
     String address,
