@@ -1,18 +1,9 @@
 spring:
   application:
     name: code_brew
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
 
   profiles:
     active: dev
-
-  h2:
-    console:
-    enabled: true
 
   output:
     ansi:
@@ -33,9 +24,8 @@ spring:
         highlight_sql: true
         use_sql_comments: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
-    defer-datasource-initialization:
 
 springdoc:
   default-produces-media-type: application/json; charset=UTF-8
@@ -45,3 +35,17 @@ logging:
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+    enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
