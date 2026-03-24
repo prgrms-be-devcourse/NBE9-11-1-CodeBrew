@@ -52,8 +52,8 @@ public class OrderService {
         }
 
         order.setTotalPrice(totalPrice);
-
-        return OrderResponse.from(order);
+        Order savedOrder = orderRepository.save(order);
+        return OrderResponse.from(savedOrder);
     }
 
     public OrderResponse findById(int id) {
