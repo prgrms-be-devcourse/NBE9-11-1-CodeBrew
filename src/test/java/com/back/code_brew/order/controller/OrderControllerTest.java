@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
-
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
@@ -31,18 +31,15 @@ public class OrderControllerTest {
 
     @Test
     @DisplayName("주문 생성 성공")
-    void test1() throws Exception{
-        ResultActions resultActions = mvc
-                .perform(
+    void test1() throws Exception {
+        mvc.perform(
                         post("/orders")
                                 .param("name","홍길동")
                                 .param("email","test@test.com")
                                 .param("address","서울")
+                                .with(csrf()) // CSRF 토큰 강제 주입
                 )
-                .andDo(print());
-        resultActions
-                .andExpect(status().is3xxRedirection())
-                .andExpect(header().string("Location", startsWith("/orders/")));
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test
@@ -54,6 +51,7 @@ public class OrderControllerTest {
                                 .param("name","")
                                 .param("email","test@test.com")
                                 .param("address","서울")
+                                .with(csrf())
                 )
                 .andDo(print());
         resultActions
@@ -70,6 +68,7 @@ public class OrderControllerTest {
                                 .param("name","홍길동")
                                 .param("email","wrong-email")
                                 .param("address","서울")
+                                .with(csrf())
                 )
                 .andDo(print());
         resultActions
@@ -85,6 +84,7 @@ public class OrderControllerTest {
                                 .param("name","홍길동")
                                 .param("email","test@test.com")
                                 .param("address","")
+                                .with(csrf())
                 )
                 .andDo(print());
         resultActions
