@@ -31,6 +31,16 @@ public class OrderQueryService {
                 .toList();
     }
 
+    //관리자용 전체 주문 목록 (최신순)
+    public List<AdminOrderListDto> getOrders() {
+        List<Order> orders = orderRepository.findAllByOrderByCreatedAtDesc();
+
+        return orders.stream()
+                .map(AdminOrderListDto::new)
+                .toList();
+    }
+
+
     // 주문 상세 조회
     public OrderDetailResponseDto getOrderDetail(Long orderId) {
         Order order = orderRepository.findById(orderId.intValue())
@@ -89,5 +99,15 @@ public class OrderQueryService {
         order.updateTotalPrice();
 
         return new OrderDetailResponseDto(order);
+    }
+
+    @Transactional
+    public AdminOrderListDto updateStatus(Integer orderId, AdminOrderStatusDto requestDto) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+
+        order.setStatus(requestDto.status());
+
+        return new AdminOrderListDto(order);
     }
 }
