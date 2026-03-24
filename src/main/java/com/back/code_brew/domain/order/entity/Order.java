@@ -27,7 +27,7 @@ public class Order {
     private Long totalPrice;
     private String status;
     private String address;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
@@ -48,5 +48,24 @@ public class Order {
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
         orderItem.setOrder(this);
+    }
+
+    public void clearOrderItems() {
+        this.orderItems.clear();
+    }
+
+    public void cancel() {
+        this.status = "CANCELED";
+    }
+
+    public void updateOrderInfo(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
+
+    public void updateTotalPrice() {
+        this.totalPrice = (long) this.orderItems.stream()
+                .mapToInt(OrderItem::getTotalPrice)
+                .sum();
     }
 }
