@@ -101,6 +101,7 @@ public class OrderQueryService {
         return new OrderDetailResponseDto(order);
     }
 
+    @Transactional
     public Order updateStatus(Integer orderId, String status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
