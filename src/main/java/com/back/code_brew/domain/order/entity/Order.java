@@ -24,29 +24,32 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String name;
+
     private String email;
+
     @Column(name = "total_price")
     private Long totalPrice;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStatus status;
+
     private String address;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    public Order(String name, String email, Long total_price,
-                 String status, String address){
+    public Order(String name, String email, Long totalPrice, String address) {
         this.name = name;
         this.email = email;
-        this.totalPrice = total_price;
-        this.status = "배송 준비 중";
-        this.address = address;
-    }
-
-    public void setTotalPrice(Long totalPrice) {
         this.totalPrice = totalPrice;
+        this.status = OrderStatus.PENDING;
+        this.address = address;
     }
 
     public void addOrderItem(OrderItem orderItem) {
@@ -59,7 +62,11 @@ public class Order {
     }
 
     public void cancel() {
-        this.status = "CANCELED";
+        this.status = OrderStatus.CANCELED;
+    }
+
+    public void ship() {
+        this.status = OrderStatus.SHIPPED;
     }
 
     public void updateOrderInfo(String name, String address) {

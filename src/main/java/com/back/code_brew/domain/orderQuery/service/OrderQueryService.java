@@ -2,6 +2,7 @@ package com.back.code_brew.domain.orderQuery.service;
 
 import com.back.code_brew.domain.order.entity.Order;
 import com.back.code_brew.domain.order.entity.OrderItem;
+import com.back.code_brew.domain.order.entity.OrderStatus;
 import com.back.code_brew.domain.order.repository.OrderRepository;
 import com.back.code_brew.domain.orderQuery.dto.*;
 import com.back.code_brew.domain.product.entity.Product;
@@ -31,7 +32,7 @@ public class OrderQueryService {
                 .toList();
     }
 
-    //관리자용 전체 주문 목록 (최신순)
+    // 관리자용 전체 주문 목록 (최신순)
     public List<AdminOrderListDto> getOrders() {
         List<Order> orders = orderRepository.findAllByOrderByCreatedAtDesc();
 
@@ -55,8 +56,7 @@ public class OrderQueryService {
         Order order = orderRepository.findById(orderId.intValue())
                 .orElseThrow(() -> new NoSuchElementException("해당 주문이 없습니다."));
 
-        // 출고 전("ORDERED")일 때만 취소 가능
-        if (!order.getStatus().equals("ORDERED")) {
+        if (order.getStatus() != OrderStatus.PENDING) {
             throw new IllegalArgumentException("출고 전 주문만 취소할 수 있습니다.");
         }
 
@@ -71,7 +71,7 @@ public class OrderQueryService {
         Order order = orderRepository.findById(orderId.intValue())
                 .orElseThrow(() -> new NoSuchElementException("해당 주문이 없습니다."));
 
-        if (!order.getStatus().equals("ORDERED")) {
+        if (order.getStatus() != OrderStatus.PENDING) {
             throw new IllegalArgumentException("출고 전 주문만 수정할 수 있습니다.");
         }
 

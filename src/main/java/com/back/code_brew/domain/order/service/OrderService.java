@@ -30,7 +30,6 @@ public class OrderService {
                 request.getName(),
                 request.getEmail(),
                 0L,
-                "배송 준비 중",
                 request.getAddress()
         );
 

@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 // 이메일로 주문 목록 조회용
 public record OrderListResponseDto(
-        Integer  orderId,
+        Integer orderId,
         String customerName,
         String email,
         String status,
@@ -18,7 +18,7 @@ public record OrderListResponseDto(
                 order.getId(),
                 order.getName(),
                 order.getEmail(),
-                order.getStatus(),
+                order.getStatus().name(),
                 order.getTotalPrice(),
                 order.getCreatedAt()
         );
