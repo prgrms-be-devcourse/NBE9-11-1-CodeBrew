@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -66,5 +68,9 @@ public class OrderService {
     public Order findById(int id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("주문 없음"));
+    }
+
+    public List<Order> findAll() {
+        return orderRepository.findAll();
     }
 }
