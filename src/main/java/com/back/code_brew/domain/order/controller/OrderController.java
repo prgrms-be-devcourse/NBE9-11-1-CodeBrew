@@ -1,6 +1,7 @@
 package com.back.code_brew.domain.order.controller;
 
 import com.back.code_brew.domain.order.dto.OrderRequest;
+import com.back.code_brew.domain.order.dto.OrderResponse;
 import com.back.code_brew.domain.order.entity.Order;
 import com.back.code_brew.domain.order.service.OrderService;
 import jakarta.validation.Valid;
@@ -16,57 +17,30 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController // @Controller 대신 @RestController 사용 (JSON 응답용)
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/orders") // 공통 경로 설정
+@RequestMapping("/api/v1/orders")
 public class OrderController {
 
     private final OrderService orderService;
 
-    // 주문 생성 시 사용할 데이터 객체 (DTO)
-    public record OrderCreateRequest(
-            @NotBlank(message = "이름은 필수입니다.")
-            String name,
-
-            @NotBlank(message = "이메일은 필수입니다.")
-            @Email(message = "올바른 이메일 형식이 아닙니다.")
-            String email,
-
-            @NotBlank(message = "주소는 필수입니다.")
-            String address
-    ) {}
-
-
+    // 주문 생성
     @PostMapping
-    public ResponseEntity<Order> create(@Valid @RequestBody OrderCreateRequest request) {
-        Order order = orderService.create(
-                request.name(),
-                request.email(),
-                request.address()
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(order);
+    public ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderRequest request) {
+        OrderResponse response = orderService.createOrder(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-
+    // 전체 주문 목록 조회
     @GetMapping
-    public ResponseEntity<List<Order>> list() {
-        List<Order> orders = orderService.findAll();
-        return ResponseEntity.ok(orders);
+    public ResponseEntity<List<OrderResponse>> list() {
+        return ResponseEntity.ok(orderService.findAll());
     }
 
-
+    // 주문 상세 조회
     @GetMapping("/{id}")
-    public ResponseEntity<Order> detail(@PathVariable Integer id) { // ID 타입은 Long 권장
-        Order order = orderService.findById(id);
-        return ResponseEntity.ok(order);
-    }
-
-
-    @PostMapping("/new")
-    public ResponseEntity<Void> createOrder(@Valid @RequestBody OrderCreateRequest request) {
-        orderService.create(request.name(), request.email(), request.address());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<OrderResponse> detail(@PathVariable Integer id) {
+        return ResponseEntity.ok(orderService.findById(id));
     }
 }
 
