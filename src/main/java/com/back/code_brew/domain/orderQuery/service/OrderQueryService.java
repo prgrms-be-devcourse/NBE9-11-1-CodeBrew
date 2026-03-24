@@ -102,12 +102,12 @@ public class OrderQueryService {
     }
 
     @Transactional
-    public Order updateStatus(Integer orderId, String status) {
+    public AdminOrderListDto updateStatus(Integer orderId, AdminOrderStatusDto requestDto) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
 
-        order.setStatus(status);
+        order.setStatus(requestDto.status());
 
-        return order;
+        return new AdminOrderListDto(order);
     }
 }

@@ -1,6 +1,5 @@
 package com.back.code_brew.domain.orderQuery.controller;
 
-import com.back.code_brew.domain.order.entity.Order;
 import com.back.code_brew.domain.orderQuery.dto.AdminOrderListDto;
 import com.back.code_brew.domain.orderQuery.dto.AdminOrderStatusDto;
 import com.back.code_brew.domain.orderQuery.service.OrderQueryService;
@@ -27,9 +26,7 @@ public class AdminOrderQueryController {
             @PathVariable Integer orderId,
             @RequestBody AdminOrderStatusDto requestDto
     ) {
-        Order order = orderQueryService.updateStatus(orderId, requestDto.status());
-
-        AdminOrderListDto response = new AdminOrderListDto(order);
+        AdminOrderListDto response = orderQueryService.updateStatus(orderId, requestDto);
 
         return new RsData<>(
                 "%d번 주문이 배송되었습니다.".formatted(orderId),
