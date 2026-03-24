@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Order {
 
     @Id
@@ -27,7 +30,9 @@ public class Order {
     private Long totalPrice;
     private String status;
     private String address;
-    private LocalDateTime createdAt;
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime created_at;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
@@ -48,24 +53,5 @@ public class Order {
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
         orderItem.setOrder(this);
-    }
-
-    public void clearOrderItems() {
-        this.orderItems.clear();
-    }
-
-    public void cancel() {
-        this.status = "CANCELED";
-    }
-
-    public void updateOrderInfo(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
-
-    public void updateTotalPrice() {
-        this.totalPrice = (long) this.orderItems.stream()
-                .mapToInt(OrderItem::getTotalPrice)
-                .sum();
     }
 }
