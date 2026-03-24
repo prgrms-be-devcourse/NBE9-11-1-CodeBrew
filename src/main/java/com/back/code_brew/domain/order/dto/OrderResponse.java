@@ -21,7 +21,7 @@ public record OrderResponse(
                 order.getName(),
                 order.getEmail(),
                 order.getAddress(),
-                order.getStatus(),
+                order.getStatus().name(),
                 order.getTotalPrice(),
                 order.getCreatedAt(),
                 order.getOrderItems().stream()
