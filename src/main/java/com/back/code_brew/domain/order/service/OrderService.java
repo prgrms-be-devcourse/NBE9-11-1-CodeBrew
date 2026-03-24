@@ -71,10 +71,6 @@ public class OrderService {
     }
 
     public List<Order> findAll() {
-        List<Order> orders = orderRepository.findAll();
-        if (orders.isEmpty()) {
-            throw new IllegalArgumentException("주문 없음");
-        }
-        return orders;
+        return orderRepository.findAll();
     }
 }
