@@ -1,0 +1,43 @@
+package com.back.code_brew.domain.orderQuery.controller;
+
+import com.back.code_brew.domain.order.entity.Order;
+import com.back.code_brew.domain.orderQuery.dto.AdminOrderListDto;
+import com.back.code_brew.domain.orderQuery.dto.AdminOrderStatusDto;
+import com.back.code_brew.domain.orderQuery.service.OrderQueryService;
+import com.back.code_brew.global.rsData.RsData;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/admin/orders")
+public class AdminOrderQueryController {
+
+    private final OrderQueryService orderQueryService;
+
+    @GetMapping
+    public List<AdminOrderListDto> getOrders() {
+        return orderQueryService.getOrders();
+    }
+
+    @PatchMapping("/{orderId}")
+    public RsData<AdminOrderListDto> updateStatus(
+            @PathVariable Integer orderId,
+            @RequestBody AdminOrderStatusDto requestDto
+    ) {
+        Order order = orderQueryService.updateStatus(orderId, requestDto.status());
+
+        AdminOrderListDto response = new AdminOrderListDto(order);
+
+        return new RsData<>(
+                "%d번 주문이 배송되었습니다.".formatted(orderId),
+                "200-1",
+                response
+        );
+
+    }
+
+
+}
