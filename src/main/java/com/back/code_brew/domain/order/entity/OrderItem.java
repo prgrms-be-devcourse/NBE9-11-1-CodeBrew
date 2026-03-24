@@ -29,4 +29,16 @@ public class OrderItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    public OrderItem(Order order, Product product, int price, int quantity) {
+        this.order = order;
+        this.product = product;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    public int getTotalPrice() {
+        return price * quantity;
+    }
+
 }

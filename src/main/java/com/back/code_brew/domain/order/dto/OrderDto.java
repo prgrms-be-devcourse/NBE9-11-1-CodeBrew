@@ -17,7 +17,7 @@ public record OrderDto (
                 order.getName(),
                 order.getEmail(),
                 order.getAddress(),
-                order.getCreated_at()
+                order.getCreatedAt()
         );
     }
 }
