@@ -151,12 +151,23 @@ public class OrderQueryService {
     // 관리자 출고 처리
     @Transactional
     public AdminOrderListDto updateStatus(Integer orderId, AdminOrderStatusDto requestDto) {
-        Order order = orderRepository.findById(orderId)
+        Order targetOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
 
-        order.setStatus(requestDto.status());
+        String email = targetOrder.getEmail();
+        LocalDate batchDate = getBatchDate(targetOrder.getCreatedAt());
 
-        return new AdminOrderListDto(order);
+        List<Order> orders = orderRepository.findByEmailOrderByCreatedAtDesc(email);
+
+        List<Order> targetOrders = orders.stream()
+                .filter(order -> getBatchDate(order.getCreatedAt()).equals(batchDate))
+                .toList();
+
+        for (Order order : targetOrders) {
+            order.setStatus(requestDto.status());
+        }
+
+        return new AdminOrderListDto(targetOrder);
     }
 
     private LocalDate getBatchDate(java.time.LocalDateTime createdAt) {

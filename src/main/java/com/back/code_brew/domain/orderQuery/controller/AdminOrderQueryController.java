@@ -29,7 +29,7 @@ public class AdminOrderQueryController {
         AdminOrderListDto response = orderQueryService.updateStatus(orderId, requestDto);
 
         return new RsData<>(
-                "%d번 주문이 배송되었습니다.".formatted(orderId),
+                "주문 묶음 상태가 변경되었습니다.",
                 "200-1",
                 response
         );
