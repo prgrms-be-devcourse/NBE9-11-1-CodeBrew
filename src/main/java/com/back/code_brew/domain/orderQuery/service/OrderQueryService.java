@@ -161,6 +161,7 @@ public class OrderQueryService {
 
         List<Order> targetOrders = orders.stream()
                 .filter(order -> getBatchDate(order.getCreatedAt()).equals(batchDate))
+                .filter(order -> order.getStatus() == OrderStatus.PENDING)
                 .toList();
 
         for (Order order : targetOrders) {
