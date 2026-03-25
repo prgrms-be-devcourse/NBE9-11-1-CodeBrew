@@ -52,7 +52,7 @@ public class OrderService {
         }
 
         order.setTotalPrice(totalPrice);
-
+        Order savedOrder = orderRepository.save(order);
         return OrderResponse.from(order);
     }
 
