@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Code Brew</title>
+</head>
+<body>
+
+<h2>☕ Code Brew 주문</h2>
+
+<div>
+    <h3>메뉴</h3>
+    <div id="product-list"></div>
+</div>
+
+<hr>
+
+<div>
+    <h3>주문 정보</h3>
+    <input id="name" placeholder="이름"><br>
+    <input id="email" placeholder="이메일"><br>
+    <input id="address" placeholder="주소"><br>
+
+    <h4>장바구니</h4>
+    <div id="cart-list"></div>
+
+    <p>총 금액: <span id="total-val">0</span>원</p>
+
+    <button onclick="submitOrder()">주문하기</button>
+</div>
+
+<script>
+    let cart = [];
+
+    window.onload = () => {
+        fetchProducts();
+    };
+
+    // ✅ 상품 목록 불러오기
+    async function fetchProducts() {
+        try {
+            const res = await fetch('/api/v1/products');
+            const products = await res.json();
+
+            const productList = document.getElementById('product-list');
+
+            productList.innerHTML = products.map(p => `
+                <div>
+                    ${p.productName} - ${p.price}원
+                    <button
+                        data-id="${p.id}"
+                        data-name="${p.productName}"
+                        data-price="${p.price}"
+                        onclick="handleAddToCart(this)">
+                        담기
+                    </button>
+                </div>
+            `).join('');
+
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    // ✅ 장바구니 추가 (중복 시 수량 증가)
+    function handleAddToCart(btn) {
+        const id = Number(btn.dataset.id);
+        const name = btn.dataset.name;
+        const price = Number(btn.dataset.price);
+
+        const existing = cart.find(item => item.id == id);
+
+        if (existing) {
+            existing.quantity += 1;
+        } else {
+            cart.push({
+                id: id,
+                productName: name,
+                price: price,
+                quantity: 1
+            });
+        }
+
+        renderCart();
+    }
+
+    // ✅ 수량 변경
+    function updateQuantity(id, diff) {
+        const item = cart.find(i => i.id == id);
+
+        if (!item) return;
+
+        item.quantity += diff;
+
+        if (item.quantity <= 0) {
+            cart = cart.filter(i => i.id != id);
+        }
+
+        renderCart();
+    }
+
+    // ✅ 장바구니 렌더링
+    function renderCart() {
+        const cartDiv = document.getElementById('cart-list');
+        const totalVal = document.getElementById('total-val');
+
+        if (cart.length === 0) {
+            cartDiv.innerHTML = "비어 있음";
+            totalVal.innerText = 0;
+            return;
+        }
+
+        let total = 0;
+
+        cartDiv.innerHTML = cart.map(item => {
+            total += item.price * item.quantity;
+
+            return `
+                <div>
+                    ${item.productName}
+                    <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                    ${item.quantity}
+                    <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                </div>
+            `;
+        }).join('');
+
+        totalVal.innerText = total;
+    }
+
+    // ✅ 주문 요청
+    async function submitOrder() {
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const address = document.getElementById('address').value;
+
+        if (!name || !email || !address) {
+            alert("정보 입력");
+            return;
+        }
+
+        if (cart.length === 0) {
+            alert("상품 없음");
+            return;
+        }
+
+        const data = {
+            name,
+            email,
+            address,
+            items: cart.map(i => ({
+                productId: i.id,
+                quantity: i.quantity
+            }))
+        };
+
+        try {
+            const res = await fetch('/api/v1/orders', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                const result = await res.json();
+                alert("주문 완료: " + result.id);
+
+                cart = [];
+                renderCart();
+
+                document.getElementById('name').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('address').value = '';
+            } else {
+                alert("실패");
+            }
+
+        } catch (e) {
+            alert("서버 오류");
+        }
+    }
+</script>
+
+</body>
+</html>
