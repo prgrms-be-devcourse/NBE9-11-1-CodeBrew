@@ -61,12 +61,16 @@ public class Order {
         this.orderItems.clear();
     }
 
+    public void changeStatus(OrderStatus status) {
+        this.status = status;
+    }
+
     public void cancel() {
-        this.status = OrderStatus.CANCELED;
+        changeStatus(OrderStatus.CANCELED);
     }
 
     public void ship() {
-        this.status = OrderStatus.SHIPPED;
+        changeStatus(OrderStatus.SHIPPED);
     }
 
     public void updateOrderInfo(String name, String address) {

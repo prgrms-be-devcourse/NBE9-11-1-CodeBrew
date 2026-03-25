@@ -165,7 +165,7 @@ public class OrderQueryService {
                 .toList();
 
         for (Order order : targetOrders) {
-            order.setStatus(requestDto.status());
+            order.changeStatus(requestDto.status());
         }
 
         return new AdminOrderListDto(targetOrder);
