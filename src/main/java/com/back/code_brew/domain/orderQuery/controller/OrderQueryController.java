@@ -1,5 +1,6 @@
 package com.back.code_brew.domain.orderQuery.controller;
 
+import com.back.code_brew.domain.orderQuery.dto.MergedOrderResponseDto;
 import com.back.code_brew.domain.orderQuery.dto.OrderDetailResponseDto;
 import com.back.code_brew.domain.orderQuery.dto.OrderListResponseDto;
 import com.back.code_brew.domain.orderQuery.dto.OrderUpdateRequestDto;
@@ -21,8 +22,8 @@ public class OrderQueryController {
     // 이메일로 주문 목록 조회
     // GET /api/v1/order-query?email=test@test.com
     @GetMapping
-    public List<OrderListResponseDto> getOrdersByEmail(@RequestParam String email) {
-        return orderQueryService.getOrdersByEmail(email);
+    public List<MergedOrderResponseDto> getOrdersByEmail(@RequestParam String email) {
+        return orderQueryService.getMergedOrdersByEmail(email);
     }
 
     // 주문 상세 조회

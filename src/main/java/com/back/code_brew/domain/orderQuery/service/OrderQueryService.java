@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -22,15 +23,61 @@ public class OrderQueryService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
-    // 이메일로 주문 목록 조회
-    // 주문 목록
-    public List<OrderListResponseDto> getOrdersByEmail(String email) {
+    // 이메일 입력을 통한 날짜별로 통합된 주문 목록 조회, 주문 날짜 기준이 아닌 14시 기준으로 계산
+    public List<MergedOrderResponseDto> getMergedOrdersByEmail(String email) {
         List<Order> orders = orderRepository.findByEmailOrderByCreatedAtDesc(email);
 
         return orders.stream()
-                .map(OrderListResponseDto::new)
+                .collect(java.util.stream.Collectors.groupingBy(
+                        order -> getBatchDate(order.getCreatedAt()),
+                        java.util.LinkedHashMap::new,
+                        java.util.stream.Collectors.toList()
+                ))
+                .entrySet()
+                .stream()
+                .map(entry -> {
+                    java.time.LocalDate orderDate = entry.getKey();
+                    List<Order> dailyOrders = entry.getValue();
+
+                    java.util.Map<Integer, MergedOrderItemDto> mergedItemMap = new java.util.LinkedHashMap<>();
+                    long totalPrice = 0L;
+
+                    for (Order order : dailyOrders) {
+                        totalPrice += order.getTotalPrice();
+
+                        for (OrderItem orderItem : order.getOrderItems()) {
+                            Integer productId = orderItem.getProduct().getId();
+
+                            if (mergedItemMap.containsKey(productId)) {
+                                MergedOrderItemDto existingItem = mergedItemMap.get(productId);
+
+                                mergedItemMap.put(productId, new MergedOrderItemDto(
+                                        existingItem.productId(),
+                                        existingItem.productName(),
+                                        existingItem.quantity() + orderItem.getQuantity(),
+                                        existingItem.price()
+                                ));
+                            } else {
+                                mergedItemMap.put(productId, new MergedOrderItemDto(
+                                        orderItem.getProduct().getId(),
+                                        orderItem.getProduct().getProductName(),
+                                        orderItem.getQuantity(),
+                                        orderItem.getPrice()
+                                ));
+                            }
+                        }
+                    }
+
+                    return new MergedOrderResponseDto(
+                            email,
+                            orderDate,
+                            totalPrice,
+                            new java.util.ArrayList<>(mergedItemMap.values())
+                    );
+                })
                 .toList();
     }
+
 
     // 관리자용 전체 주문 목록 (최신순)
     public List<AdminOrderListDto> getOrders() {
@@ -101,6 +148,7 @@ public class OrderQueryService {
         return new OrderDetailResponseDto(order);
     }
 
+    // 관리자 출고 처리
     @Transactional
     public AdminOrderListDto updateStatus(Integer orderId, AdminOrderStatusDto requestDto) {
         Order order = orderRepository.findById(orderId)
@@ -109,5 +157,12 @@ public class OrderQueryService {
         order.setStatus(requestDto.status());
 
         return new AdminOrderListDto(order);
+    }
+
+    private LocalDate getBatchDate(java.time.LocalDateTime createdAt) {
+        if (createdAt.getHour() < 14) {
+            return createdAt.toLocalDate().minusDays(1);
+        }
+        return createdAt.toLocalDate();
     }
 }
