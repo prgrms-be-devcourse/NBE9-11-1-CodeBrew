@@ -30,7 +30,6 @@ public class OrderService {
                 request.getName(),
                 request.getEmail(),
                 0L,
-                "배송 준비 중",
                 request.getAddress()
         );
 
@@ -53,7 +52,7 @@ public class OrderService {
 
         order.setTotalPrice(totalPrice);
         Order savedOrder = orderRepository.save(order);
-        return OrderResponse.from(order);
+        return OrderResponse.from(savedOrder);
     }
 
     public OrderResponse findById(int id) {

@@ -4,6 +4,8 @@ import com.back.code_brew.domain.cart.dto.CartItemDto;
 import com.back.code_brew.domain.cart.dto.CartItemQuantityDto;
 import com.back.code_brew.domain.cart.entity.CartItem;
 import com.back.code_brew.domain.cart.repository.CartItemRepository;
+import com.back.code_brew.domain.product.entity.Product;
+import com.back.code_brew.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +17,19 @@ import java.util.Optional;
 public class CartService {
 
     private final CartItemRepository cartItemRepository;
+    private final ProductService productService;
 
     public List<CartItem> getCart() {
         return cartItemRepository.findAll();
     }
 
-    public CartItem addItem(CartItemDto cartItemDto) {
+     public CartItem addItem(CartItemDto cartItemDto) {
 
         if (cartItemDto.getQuantity() < 1) {
             throw new IllegalArgumentException("수량은 1 이상이어야 합니다.");
         }
+
+        Product product = productService.findById(cartItemDto.getProductId());
 
         Optional<CartItem> optionalCartItem = cartItemRepository.findByProductId(cartItemDto.getProductId());
 
@@ -37,9 +42,9 @@ public class CartService {
 
         // 없으면 → 새로 생성
         CartItem cartItem = new CartItem(
-                cartItemDto.getProductId(),
-                cartItemDto.getProductName(),
-                cartItemDto.getPrice(),
+                product.getId(),
+                product.getProductName(),
+                product.getPrice(),
                 cartItemDto.getQuantity()
         );
 

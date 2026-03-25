@@ -1,22 +1,23 @@
-package com.back.code_brew.domain.order.dto;
+package com.back.code_brew.domain.orderQuery.dto;
 
 import com.back.code_brew.domain.order.entity.Order;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record OrderResponse(
-        int id,
-        String name,
+// 주문 상세 조회용
+public record AdminOrderListDto(
+        int orderId,
+        String customerName,
         String email,
         String address,
         String status,
         Long totalPrice,
         LocalDateTime createdAt,
-        List<OrderItemResponse> orderItems
+        List<OrderItemResponseDto> items
 ) {
-    public static OrderResponse from(Order order) {
-        return new OrderResponse(
+    public AdminOrderListDto(Order order) {
+        this(
                 order.getId(),
                 order.getName(),
                 order.getEmail(),
@@ -25,7 +26,7 @@ public record OrderResponse(
                 order.getTotalPrice(),
                 order.getCreatedAt(),
                 order.getOrderItems().stream()
-                        .map(OrderItemResponse::from)
+                        .map(OrderItemResponseDto::new)
                         .toList()
         );
     }
