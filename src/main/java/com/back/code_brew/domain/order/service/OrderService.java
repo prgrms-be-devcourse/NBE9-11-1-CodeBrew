@@ -36,6 +36,10 @@ public class OrderService {
 
         long totalPrice = 0;
 
+        if(request.getItems().isEmpty()){
+            throw new IllegalArgumentException("장바구니가 비었습니다.");
+        }
+
         for (OrderItemRequest itemRequest : request.getItems()) {
 
             Product product = productRepository.findById(itemRequest.getProductId())
