@@ -17,7 +17,7 @@ import static jakarta.persistence.FetchType.*;
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private int price;
     private int quantity;

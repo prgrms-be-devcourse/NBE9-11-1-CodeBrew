@@ -52,6 +52,7 @@ public class OrderQueryService {
                                 MergedOrderItemDto existingItem = mergedItemMap.get(productId);
 
                                 mergedItemMap.put(productId, new MergedOrderItemDto(
+                                        existingItem.orderId(),
                                         existingItem.productId(),
                                         existingItem.productName(),
                                         existingItem.quantity() + orderItem.getQuantity(),
@@ -59,6 +60,7 @@ public class OrderQueryService {
                                 ));
                             } else {
                                 mergedItemMap.put(productId, new MergedOrderItemDto(
+                                        orderItem.getId(),
                                         orderItem.getProduct().getId(),
                                         orderItem.getProduct().getProductName(),
                                         orderItem.getQuantity(),

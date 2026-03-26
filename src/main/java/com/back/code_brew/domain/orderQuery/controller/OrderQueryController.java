@@ -2,7 +2,6 @@ package com.back.code_brew.domain.orderQuery.controller;
 
 import com.back.code_brew.domain.orderQuery.dto.MergedOrderResponseDto;
 import com.back.code_brew.domain.orderQuery.dto.OrderDetailResponseDto;
-import com.back.code_brew.domain.orderQuery.dto.OrderListResponseDto;
 import com.back.code_brew.domain.orderQuery.dto.OrderUpdateRequestDto;
 import com.back.code_brew.domain.orderQuery.service.OrderQueryService;
 import com.back.code_brew.global.rsData.RsData;
@@ -29,8 +28,14 @@ public class OrderQueryController {
     // 주문 상세 조회
     // GET /api/v1/order-query/{orderId}
     @GetMapping("/{orderId}")
-    public OrderDetailResponseDto getOrderDetail(@PathVariable Long orderId) {
-        return orderQueryService.getOrderDetail(orderId);
+    public RsData<OrderDetailResponseDto> getOrderDetail(@PathVariable Long orderId) {
+        OrderDetailResponseDto dto = orderQueryService.getOrderDetail(orderId);
+
+        return new RsData<>(
+                "주문 조회 성공",
+                "200-1",
+                dto
+        );
     }
 
     // 주문 취소
